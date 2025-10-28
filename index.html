@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <main>
+      <aside class="left_side">
+        <div class="logo">
+            <em class="fas fas fa-calendar-days"></em>
+          <h1>CalendRéso</h1>
+        </div>
+        <div class="clock">
+          <p class="hour">12</p>
+          <p>:</p>
+          <p class="minute">09</p>
+          <p>:</p>
+          <p class="second">55</p>
+        </div>
+
+        <div class="mode">
+            <p>light mode</p>
+           <div class="btn_mode">
+             <input type="checkbox" name="mode" id="mode">
+            <label for="mode"></label>
+           </div>
+        </div>
+
+        <div class="search">
+          <input type="search" placeholder="search reservation" />
+          <span id="searche">
+            <em class="fas fa-magnifying-glass"></em>
+          </span>
+        </div>
+
+        <div class="add_reservation">
+          <button id="add">
+            <em class="fas fa-calendar-plus"></em>
+            add reservation
+          </button>
+        </div>
+
+        <div class="summary">
+          <div class="line">
+            <span id="T_color"></span>
+            <p >total</p>
+            <p id="total">33</p>
+          </div>
+
+          <div class="line">
+            <span  id="S_color"></span>
+            <p>standart</p>
+             <p id="standart">6</p>
+          </div>
+
+          <div class="line">
+            <span  id="An_color"></span>
+            <p>anniversaires</p>
+             <p id="anniversaires">2</p>
+          </div>
+
+          <div class="line">
+            <span  id="M_color"></span>
+            <p>mariages</p>
+            <p id="mariages">0</p>
+          </div>
+          <div class="line">
+            <span  id="REN_color"></span>
+            <p>réunions</p>
+            <p id="réunions">1</p>
+          </div>
+        </div>
+      </aside>
+      <section class="calander">
+        <div class="title">
+          <h1>november</h1>
+        </div>
+        <div class="days">
+          <div class="jour">Lundi</div>
+          <div class="jour">Mardi</div>
+          <div class="jour">Mercredi</div>
+          <div class="jour">Jeudi</div>
+          <div class="jour">Vendredi</div>
+          <div class="jour">Samedi</div>
+          <div class="jour">Dimanche</div>
+        </div>
+
+        <div class="box">
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+        </div>
+      </section>
+    </main>
+    <script src="./main.js"></script>
+  </body>
+</html>
+
+<!-- <form id="form">
+
+                <div class="name">
+                    <label for="name">nom</label>
+                    <input type="text" id="name">
+                </div>
+
+
+
+                
+                <div class="email">
+                    <label for="name">email</label>
+                    <input type="text" id="email">
+                </div>
+
+
+                
+                <div class="nombre_personne">
+                    <label for="nombre_personne">nomber personne</label>
+                    <input type="text" id="nombre_personne">
+                </div>
+                <div class="time">
+                    <label for="time">
+                        <em class="fas fa-clock"></em>
+                    </label>
+                    <input type="time" id="time">
+
+                    </div>
+
+                    <div class="date">
+                        <label for="date">
+                            <em class="fas fa-calendar-plus"></em>
+                        </label>
+                        <input type="date" name="" id="">
+                    </div>
+
+
+                    <div class="select">
+                        <label for="type">
+                            <em class="fas fa-clipboard-check">
+
+                            </em>
+                        </label>
+                        <select name="type_reservation" id="type" >
+
+        
+                             
+                              <option value="standart">standart</option>
+                            <option value="anniversaires">anniversaires</option>
+                            <option value="mariages">mariages</option>
+                            <option value=réunions"">réunions</option>
+                            
+                        </select>
+
+
+
+                     
+                
+
+
+
+                    <div class="comment">
+                        <label for="comment">commentaire</label>
+                        <textarea name="comment" id="comment"></textarea>
+                    </div>
+
+
+                    <button type="submit">reserve</button>
+            </form> -->
