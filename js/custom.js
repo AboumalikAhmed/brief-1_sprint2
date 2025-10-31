@@ -1,3 +1,4 @@
+
 let clock = document.querySelector(".clock");
 let clock_para = document.querySelectorAll(".clock p");
 let text_mode = document.getElementById("text_mode");
@@ -146,17 +147,17 @@ function openForm(editData = null) {
     
                 <div class="name">
                     <label for="name">nom</label>
-                    <input type="text" id="name" value="${editData ? editData.Name : ''}">
+                    <input type="text" id="name" required value="${editData ? editData.Name : ''}">
                 </div>
 
                 <div class="email">
                     <label for="name">email</label>
-                    <input type="text" id="email" value="${editData ? editData.Email : ''}">
+                    <input type="email" id="email" value="${editData ? editData.Email : ''}">
                 </div>
 
                 <div class="nombre_personne">
                     <label for="nombre_personne">nombre personne</label>
-                    <input type="text" id="nombre_personne" value="${editData ? editData.Nombre_personne : ''}">
+                    <input type="text" id="nombre_personne" required value="${editData ? editData.Nombre_personne : ''}">
                 </div>
      <div class="comment">
                         <label for="comment">commentaire</label>
@@ -170,7 +171,7 @@ function openForm(editData = null) {
                     <label for="time_start">
                           heure du début
                         </label>
-                    <input type="time" id="time_start" value="${editData ? editData.Time_start : ''}">
+                    <input type="time" id="time_start" required value="${editData ? editData.Time_start : ''}">
 
                     </div>
 
@@ -179,7 +180,7 @@ function openForm(editData = null) {
                     <label for="time_end">
                           heure du fin
                         </label>
-                    <input type="time" id="time_end" value="${editData ? editData.Time_end : ''}">
+                    <input type="time" id="time_end" required value="${editData ? editData.Time_end : ''}">
 
                     </div>
 
@@ -188,7 +189,7 @@ function openForm(editData = null) {
                         <label for="date">
                           date
                         </label>
-                        <input type="date" id="date" value="${editData ? editData.Date : ''}">
+                        <input type="date" id="date" required value="${editData ? editData.Date : ''}">
                     </div>
 
 
@@ -196,7 +197,7 @@ function openForm(editData = null) {
                         <label for="type">
                           type de réservation
                         </label>
-                        <select name="type_reservation" id="type">
+                        <select name="type_reservation" required id="type">
                               <option value="standart" ${editData && editData.Type === 'standart' ? 'selected' : ''}>standart</option>
                             <option value="anniversaires" ${editData && editData.Type === 'anniversaires' ? 'selected' : ''}>anniversaires</option>
                             <option value="mariages" ${editData && editData.Type === 'mariages' ? 'selected' : ''}>mariages</option>
@@ -219,15 +220,10 @@ function openForm(editData = null) {
 
 
 
-// add summary of details
 
 
 
-
-
-
-
-  // Apply dark mode styles if needed
+//dark mode
 
 
 
@@ -246,7 +242,7 @@ function openForm(editData = null) {
   let form = popOp.querySelector("#form");
   let close_btn = popOp.querySelector(".close");
 
-  // Set edit ID if editing
+  //  edit ID 
   if (editData) {
     form.dataset.editId = editData.Id;
   }
@@ -263,7 +259,7 @@ function openForm(editData = null) {
     let dateInput = form.querySelector("#date");
     let type = form.querySelector("#type");
 
-    // build info object
+    //  info object
     let info = {
       Name: name.value,
       Email: email.value,
@@ -277,7 +273,7 @@ function openForm(editData = null) {
 
     const editId = form.dataset.editId;
     if (editId !== undefined && editId !== "") {
-      // update existing reservation
+      // update reservation
       info.Id = Number(editId);
       const idx = arr.findIndex((a) => String(a.Id) === String(editId));
       if (idx !== -1) arr[idx] = info;
@@ -361,7 +357,7 @@ function addToCalendarCard(info) {
     standart: "#87CEEB",
     anniversaires: "#ff4bc9",
     mariages: "#f4a628",
-    reunions: "#708090",
+    reunions: "#888b8fff",
   };
   
   cards.forEach((card) => {
@@ -371,7 +367,7 @@ function addToCalendarCard(info) {
         : card.firstElementChild.textContent;
 
     if (ifSmall == dayOf) {
-      let cardContent = `<div data-color="${info.Type}" data-id="${info.Id}" class="info_card" style="background:${color[info.Type]}">
+      let cardContent = `<div data-color="${info.Type}" data-id="${info.Id}" class="info_card" style=" border-left : 5px solid ${color[info.Type]}; border-bottom: 2.5px solid ${color[info.Type]}">
              <p>${info.Name}</p>
             <span>${info.Time_start}</span>
            </div>`;
@@ -388,7 +384,7 @@ function updateCalendarCard(info) {
     standart: "#87CEEB",
     anniversaires: "#ff4bc9",
     mariages: "#f4a628",
-    reunions: "#708090",
+    reunions: "#888b8fff",
   };
   
   // Remove old entry
@@ -466,6 +462,42 @@ function showReservationDetails(data) {
  </div>`;
 
   document.querySelector(".reservation").innerHTML = content;
+
+
+// add mode of card_reservation
+
+
+
+let card_reservation = reservation.querySelector(".card_reservation");
+
+
+
+
+if (mode.checked){
+changeMode_dark(card_reservation);
+card_reservation.querySelectorAll(".card_title h4").forEach(h4 =>{
+  h4.style.color = "#fff";
+})
+
+
+}
+
+
+
+else{
+  changeMode_light(card_reservation);
+card_reservation.querySelectorAll(".card_title h4").forEach(h4 =>{
+  h4.style.color = "#000";})
+  
+}
+
+
+
+
+
+
+
+
   reservation.style.display = "flex";
 
   document.querySelector(".close_reservation_details").addEventListener("click", () => {
@@ -517,7 +549,6 @@ console.log(search_input);
 search_btn.addEventListener("click", ()=>{
   let searchValue = search_input.value.toLowerCase();
 
-  console.log(searchValue);
   
   let search_value_type = arr.filter(data =>{
     return data.Type == searchValue;
@@ -525,8 +556,10 @@ search_btn.addEventListener("click", ()=>{
 
 
 
-  console.log(search_value_type);
-
+  let overlay_content = document.querySelector(".overlay_content");
+    let overlay_body = document.querySelector(".overlay_body")
+    let close_reservation_details = overlay_content.querySelector(".close_reservation_details");
+ let overlay_header =overlay_content.querySelector(".overlay_header")
 
 
   if(search_value_type.length === 0){
@@ -535,36 +568,79 @@ search_btn.addEventListener("click", ()=>{
 
 
 
-
-
-
+  for (const arr_data of arr){
+  
+  
  
 
-
-
-
-
-
-  for (const arr_data of arr){
-    
-
-  console.log(arr_data.Type);
-
-  console.log(arr_data);
-  
-   if(arr_data.Type != searchValue){
+   if(!search_value_type)
     continue;
+    
+   if(mode.checked){
+    changeMode_dark(overlay_body);
+    changeMode_dark(overlay_header);
+
    }
+
 
    else{
+    changeMode_light(overlay_body);
+     changeMode_light(overlay_header)
 
+   }
+    overlay_body.innerHTML = "";
+  
+
+    search_btn.addEventListener("click" , ()=>{
+      overlay_content.style.display = "block";
+       
+    })
+    
+    let content_card = `
+     <div class="card_details">  
+          <p><strong>Prénom:</strong> <span id="detail_name">${arr_data.Name}</span></p>
+          <p><strong>Email:</strong> <span id="detail_email">${arr_data.Email}</span></p>  
+          <p><strong>Number of People:</strong> <span id="detail_nombre_personne">
+          ${arr_data.Nombre_personne}
+          </span></p>
+          <p><strong>Date:</strong> <span id="detail_date">
+          ${arr_data.Date}
+          </span></p>
+          <p><strong>Type:</strong>
+          
+          <span id="detail_type">
+          ${arr_data.Type}
+          </span></p>
+          <p><strong>Time start:</strong> <span id="detail_time_start">
+          ${arr_data.Time_start}
+          </span></p>
+           <p><strong>Time end:</strong> <span id="detail_time_end">
+           ${arr_data.Time_end}
+           </span></p>
+          <p><strong>Comment:</strong> 
+          ${arr_data.Comment}
+          <span id="detail_comment"></span></p>
+
+    </div>
+    
+    `
+
+
+    
+    overlay_body.innerHTML += content_card
+
+
+    close_reservation_details.addEventListener("click" , ()=>{
+      overlay_content.style.display = "none"
+    })
   
    }
   
-  }
+  
 
   
 })
+
 
 
 
