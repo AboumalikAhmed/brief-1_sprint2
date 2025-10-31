@@ -127,14 +127,15 @@ let id = 0;
 let arr = [];
 console.log(add_btn);
 
-add_btn.addEventListener("click", function () {
+// Function to create and open the popup form
+function openForm(editData = null) {
   let popOp = document.createElement("div");
   popOp.setAttribute("class", "popOp");
   document.body.appendChild(popOp);
+  
   let formOfPopOp = ` <form id="form">
-
       <div class="title_popOp">
-      <h1>novelle reservation</h1>
+      <h1>${editData ? 'Modifier Réservation' : 'Nouvelle Réservation'}</h1>
       <div class="close">
       <span>&times</span>
       </div>
@@ -145,21 +146,21 @@ add_btn.addEventListener("click", function () {
     
                 <div class="name">
                     <label for="name">nom</label>
-                    <input type="text" id="name">
+                    <input type="text" id="name" value="${editData ? editData.Name : ''}">
                 </div>
 
                 <div class="email">
                     <label for="name">email</label>
-                    <input type="text" id="email">
+                    <input type="text" id="email" value="${editData ? editData.Email : ''}">
                 </div>
 
                 <div class="nombre_personne">
-                    <label for="nombre_personne">nomber personne</label>
-                    <input type="text" id="nombre_personne">
+                    <label for="nombre_personne">nombre personne</label>
+                    <input type="text" id="nombre_personne" value="${editData ? editData.Nombre_personne : ''}">
                 </div>
      <div class="comment">
                         <label for="comment">commentaire</label>
-                        <textarea name="comment" id="comment"></textarea>
+                        <textarea name="comment" id="comment">${editData ? editData.Comment : ''}</textarea>
                     </div>
     </div>
 
@@ -167,20 +168,18 @@ add_btn.addEventListener("click", function () {
 
      <div class="time start">
                     <label for="time_start">
-                       
-                          heur du debut
+                          heure du début
                         </label>
-                    <input type="time" id="time_start">
+                    <input type="time" id="time_start" value="${editData ? editData.Time_start : ''}">
 
                     </div>
 
 
   <div class="time end">
                     <label for="time_end">
-                       
-                          heur du fin
+                          heure du fin
                         </label>
-                    <input type="time" id="time_end">
+                    <input type="time" id="time_end" value="${editData ? editData.Time_end : ''}">
 
                     </div>
 
@@ -189,27 +188,20 @@ add_btn.addEventListener("click", function () {
                         <label for="date">
                           date
                         </label>
-                        <input type="date" id="date">
+                        <input type="date" id="date" value="${editData ? editData.Date : ''}">
                     </div>
 
 
                     <div class="select">
                         <label for="type">
-                          
-
-                          type du reservation
+                          type de réservation
                         </label>
-                        <select name="type_reservation" id="type" >
-
-        
-                             
-                              <option value="standart">standart</option>
-                            <option value="anniversaires">anniversaires</option>
-                            <option value="mariages">mariages</option>
-                            <option value="reunions">reunions</option>
-                            
+                        <select name="type_reservation" id="type">
+                              <option value="standart" ${editData && editData.Type === 'standart' ? 'selected' : ''}>standart</option>
+                            <option value="anniversaires" ${editData && editData.Type === 'anniversaires' ? 'selected' : ''}>anniversaires</option>
+                            <option value="mariages" ${editData && editData.Type === 'mariages' ? 'selected' : ''}>mariages</option>
+                            <option value="reunions" ${editData && editData.Type === 'reunions' ? 'selected' : ''}>réunions</option>
                         </select>
-
                         </div>
                         
                 
@@ -219,12 +211,26 @@ add_btn.addEventListener("click", function () {
     
 </div>
   <div class="footer_form">
-   
-                    <button type="submit">reserve</button>
+                    <button type="submit">${editData ? 'Modifier' : 'Réserver'}</button>
   </div>
             </form>`;
 
   popOp.innerHTML = formOfPopOp;
+
+
+
+// add summary of details
+
+
+
+
+
+
+
+  // Apply dark mode styles if needed
+
+
+
 
   if (mode.checked) {
     changeMode_dark(popOp.querySelector("#form"));
@@ -240,6 +246,11 @@ add_btn.addEventListener("click", function () {
   let form = popOp.querySelector("#form");
   let close_btn = popOp.querySelector(".close");
 
+  // Set edit ID if editing
+  if (editData) {
+    form.dataset.editId = editData.Id;
+  }
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -249,11 +260,10 @@ add_btn.addEventListener("click", function () {
     let comment = form.querySelector("#comment");
     let time_start = form.querySelector("#time_start");
     let time_end = form.querySelector("#time_end");
-    let date = form.querySelector("#date");
+    let dateInput = form.querySelector("#date");
     let type = form.querySelector("#type");
-    let btn_submit = form.querySelector("button[type='submit']");
 
-    // build info object (Id assigned below depending on new vs edit)
+    // build info object
     let info = {
       Name: name.value,
       Email: email.value,
@@ -261,7 +271,7 @@ add_btn.addEventListener("click", function () {
       Comment: comment.value,
       Time_start: time_start.value,
       Time_end: time_end.value,
-      Date: date.value,
+      Date: dateInput.value,
       Type: type.value,
     };
 
@@ -271,108 +281,170 @@ add_btn.addEventListener("click", function () {
       info.Id = Number(editId);
       const idx = arr.findIndex((a) => String(a.Id) === String(editId));
       if (idx !== -1) arr[idx] = info;
+      updateCalendarCard(info);
     } else {
       // new reservation
       info.Id = id++;
       arr.push(info);
+      addToCalendarCard(info);
     }
 
-    console.log(id);
     console.log(arr);
 
-    btn_submit.addEventListener("click", () => {
-      name.value = "";
-      email.value = "";
-      nombre_personne.value = "";
-      time_end.value = "";
-      time_start.value = "";
-      date.value = "";
-      comment.value = "";
-      type.value = "";
-    });
+    // Clear form
+    name.value = "";
+    email.value = "";
+    nombre_personne.value = "";
+    time_end.value = "";
+    time_start.value = "";
+    dateInput.value = "";
+    comment.value = "";
+    type.value = "";
 
     close_btn.click();
 
-    // clear edit marker so subsequent opens are treated as new by default
-    if (form.dataset.editId) delete form.dataset.editId;
 
-    let dayOf = date.value.split("-")[2];
-    console.log(dayOf);
 
-    let color = {
-      standart: "#87CEEB",
-      anniversaires: "#ff4bc9",
-      mariages: "#f4a628",
-      reunions: "#708090",
-    };
-    cards.forEach((card) => {
-      let ifSmall =
-        card.firstElementChild.textContent < 10
-          ? "0" + card.firstElementChild.textContent
-          : card.firstElementChild.textContent;
 
-      if (ifSmall == dayOf) {
-        // If editing, update existing calendar entries for this Id. Otherwise, append a new card.
-        const existingEls = card.querySelectorAll(
-          `.info_card[data-id="${info.Id}"]`
-        );
-        if (existingEls.length) {
-          existingEls.forEach((el) => {
-            el.dataset.color = info.Type;
-            el.style.background = color[info.Type];
-            el.innerHTML = `<p>${info.Name}</p><span>${info.Time_start}</span>`;
-          });
-        } else {
-          let cardContent = `  <div data-color="${info.Type}" data-id="${
-            info.Id
-          }" class="info_card" style="background:${color[info.Type]}">
+let reserve = document.querySelector(".reservation");
+let summary =document.querySelector(".summary");
+let total = document.getElementById("total");
+let standart = document.getElementById("standart");
+let anniversaires = document.getElementById("anniversaires");
+let mariages = document.getElementById("mariages");
+let reunions = document.getElementById("reunions");
+
+total.textContent = 0;
+  standart.textContent = 0;
+  anniversaires.textContent = 0;
+  mariages.textContent = 0;
+  reunions.textContent = 0;
+
+
+  
+
+
+  let totalCount = arr.length;
+  let standartCount = arr.filter(item => item.Type === 'standart').length;
+  let anniversairesCount = arr.filter(item => item.Type === 'anniversaires').length;
+  let mariagesCount = arr.filter(item => item.Type === 'mariages').length;
+  let reunionsCount = arr.filter(item => item.Type === 'reunions').length;
+
+  total.textContent = totalCount;
+  standart.textContent = standartCount;
+  anniversaires.textContent = anniversairesCount;
+  mariages.textContent = mariagesCount;
+  reunions.textContent = reunionsCount;
+
+
+
+  });
+
+
+
+
+
+  close_btn.addEventListener("click", () => {
+    popOp.remove();
+  });
+}
+
+
+
+
+
+
+// Function to add reservation to calendar card
+function addToCalendarCard(info) {
+  let dayOf = info.Date.split("-")[2];
+  let color = {
+    standart: "#87CEEB",
+    anniversaires: "#ff4bc9",
+    mariages: "#f4a628",
+    reunions: "#708090",
+  };
+  
+  cards.forEach((card) => {
+    let ifSmall =
+      card.firstElementChild.textContent < 10
+        ? "0" + card.firstElementChild.textContent
+        : card.firstElementChild.textContent;
+
+    if (ifSmall == dayOf) {
+      let cardContent = `<div data-color="${info.Type}" data-id="${info.Id}" class="info_card" style="background:${color[info.Type]}">
              <p>${info.Name}</p>
             <span>${info.Time_start}</span>
            </div>`;
 
-          card.innerHTML += cardContent;
-        }
-      }
-    });
+      card.innerHTML += cardContent;
+    }
   });
+}
 
-  close_btn.addEventListener("click", () => {
-    popOp.style.display = "none";
+// Function to update reservation in calendar card
+function updateCalendarCard(info) {
+  let dayOf = info.Date.split("-")[2];
+  let color = {
+    standart: "#87CEEB",
+    anniversaires: "#ff4bc9",
+    mariages: "#f4a628",
+    reunions: "#708090",
+  };
+  
+  // Remove old entry
+  cards.forEach((card) => {
+    const oldEntry = card.querySelector(`.info_card[data-id="${info.Id}"]`);
+    if (oldEntry) {
+      oldEntry.remove();
+    }
   });
+  
+  // Add updated entry
+  addToCalendarCard(info);
+}
+
+add_btn.addEventListener("click", function () {
+  openForm();
 });
 
 cards.forEach((el) => {
   el.addEventListener("click", function (e) {
-    arr.forEach((data) => {
-      if (data.Id == e.target.dataset.id) {
-        console.log(data.Name);
+    // Check if clicked element is an info_card or its child
+    let infoCard = e.target.closest('.info_card');
+    if (infoCard) {
+      let reservationId = infoCard.dataset.id;
+      let reservationData = arr.find(data => data.Id == reservationId);
+      
+      if (reservationData) {
+        showReservationDetails(reservationData);
+      }
+    }
+  });
+});
 
-        let reservation = document.querySelector(".reservation");
+// Function to show reservation details
+function showReservationDetails(data) {
+  let reservation = document.querySelector(".reservation");
 
-        let content = `
+  let content = `
  <div class="card_reservation">
  <div class="header_card_reservation">
- <h2>title</h2>
+ <h2>Détails de Réservation</h2>
 <div class="controle_btn">
-
-<button data-id = ${data.Id} class="edit">edit</button>
-<button data-id = ${data.Id} class="delete">delete</button>
-
+<button data-id="${data.Id}" class="edit"><em class = "fas fa-pencil-alt"></em></button>
+<button data-id="${data.Id}" class="delete"><em class="fas fa-trash"></em></button>
 </div>
 <span class="close_reservation_details">&times</span>
 </div>
 
-
 <div class="card_reservation_content"> 
-
 <div class="card_title">
-<h4>nom</h4>
-<h4>N°= persons</h4>
-<h4>date</h4>
-<h4>h debut</h4>
-<h4>h fin</h4>
-<h4>type</h4>
-
+<h4>Nom</h4>
+<h4>N° Personnes</h4>
+<h4>Date</h4>
+<h4>H Début</h4>
+<h4>H Fin</h4>
+<h4>Type</h4>
 </div>
 <div class="show_content_info">
 <p>${data.Name}</p>
@@ -381,55 +453,66 @@ cards.forEach((el) => {
 <p>${data.Time_start}</p>
 <p>${data.Time_end}</p>
 <p>${data.Type}</p>
-
-
-
+</div>
+<div class="card_title" style="margin-top: 20px;">
+<h4>Email</h4>
+<h4>Commentaire</h4>
+</div>
+<div class="show_content_info">
+<p>${data.Email}</p>
+<p>${data.Comment}</p>
 </div>
 </div>
- </div>
- 
- `;
+ </div>`;
 
-        document.querySelector(".reservation").innerHTML = content;
+  document.querySelector(".reservation").innerHTML = content;
+  reservation.style.display = "flex";
 
-        reservation.style.display = "flex";
-
-        document
-          .querySelector(".close_reservation_details")
-          .addEventListener("click", () => {
-            reservation.style.display = "none";
-          });
-      }
-    });
+  document.querySelector(".close_reservation_details").addEventListener("click", () => {
+    reservation.style.display = "none";
   });
-});
 
-let reserve = document.querySelector(".reservation");
+  // Add event  edit and delete buttons
+  document.querySelector(".edit").addEventListener("click", (e) => {
+    let reservationId = e.target.dataset.id;
+    let reservationData = arr.find(data => data.Id == reservationId);
+    if (reservationData) {
+      reservation.style.display = "none";
+      openForm(reservationData);
+    }
+  });
 
-console.log(reserve);
+  document.querySelector(".delete").addEventListener("click", (e) => {
+    let reservationId = e.target.dataset.id;
+    deleteReservation(reservationId);
+    reservation.style.display = "none";
+  });
+}
 
-// edit
-reserve.addEventListener("click", (e) => {
-  if (e.target.className == "edit") {
-    console.log(e.target);
-    let arr_filter = arr.filter((data) => {
-      return data.id == e.target.dataset.Id;
-    });
+//  delete reservation
+function deleteReservation(id) {
+  // Remove from array
+  arr = arr.filter(data => data.Id != id);
+  
+  // Remove from calendar
+  cards.forEach((card) => {
+    const reservationElement = card.querySelector(`.info_card[data-id="${id}"]`);
+    if (reservationElement) {
+      reservationElement.remove();
+    }
+  });
+  
+  console.log("Reservation deleted:", id);
+  console.log("Remaining reservations:", arr);
+}
 
-    let name = document.querySelector("#name");
-    let email = document.getElementById("#email");
-    let comment = document.getElementById("#comment");
-    let time_start = document.getElementById("#time_start");
-    let time_end = document.getElementById("#time_end");
-    let date = document.getElementById("#date");
-    let type = document.getElementById("#type");
-    let btn_submit = document.getElementById("button[type='submit']");
-    let popOp = document.querySelector(".popOp");
-    popOp.style.display = "block";
 
-    cards.forEach((card) => {
-       
-       
-    });
-  }
-});
+
+
+
+
+
+
+
+
+

@@ -125,14 +125,39 @@ position: relative;
 
 
 
+
 .mode input[type="checkbox"]:checked + label::after{
 transform: translateX(30px);
 }
 
 
+
+
+
 input[type="checkbox"]{
 
     display: none;
+}
+
+input[type="checkbox"]:checked + label.ch::after{
+    background-color: #ffffff;
+}
+
+main.smooth{
+   animation: smooth 1s linear ;
+}
+
+
+@keyframes smooth {
+
+    from{
+        opacity: 0;
+    }
+
+    to{
+        opacity: 1;
+    }
+    
 }
 
 
@@ -504,6 +529,7 @@ padding: 10px 0;
     text-transform: capitalize;
     outline: 0;
     padding: 10px ;
+    background-color: transparent;
 }
 
 
@@ -514,6 +540,7 @@ padding: 10px 0;
     height: 100px;
     padding: 10px;
     outline: 0;
+    background-color: transparent;
 }
 
 
@@ -549,10 +576,11 @@ padding: 10px 0;
 }
 .card_reservation{
 width: 800px;
-padding: 30px;
+padding: 10px;
+border-radius: 10px;
 
 background-color: #ffffff;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(11, 11, 11, 0.2);
 position: absolute;
 left:50%;
 top: 50%;
@@ -564,6 +592,8 @@ display: flex;
 padding: 10px;
 align-items: center;
 justify-content: space-between;
+border-bottom: 1px solid #5d5c5c85;
+padding-bottom: 20px;
 }
 
 
@@ -588,10 +618,20 @@ gap: 10px;
 
 .edit{
 background-color: #0cee50;
+font-size: 10px;
+& em{
+    color: #fff;
+}
 }
 
 .delete{
     background-color: red;
+    font-size: 10px;
+ 
+    & em{
+        color: #fff;
+    }
+
 }
 
 .close_reservation_details{
@@ -605,19 +645,20 @@ background-color: #0cee50;
 
 
 .card_reservation_content{
+/* background-color: #0cee50; */
 display: flex;
 justify-content: center;
 flex-direction: column;
 text-transform: capitalize;
-padding: 10px;
+padding: 20px;
 gap: 20px;
 & h4{
     font-size: 14px;
-    font-weight: 500;
-    background-color: #fa8b1b;
+    font-weight: 700;
     width: 300px;
     text-align: center;
     margin: 0 5px;
+    color: #302f2f;
 
 }
 }
