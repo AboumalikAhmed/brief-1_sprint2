@@ -507,6 +507,64 @@ function deleteReservation(id) {
 }
 
 
+let search_btn = document.getElementById("search");
+console.log(search_btn);
+let search_input = document.querySelector(".left_side input[type='search']");
+console.log(search_input);
+
+
+
+search_btn.addEventListener("click", ()=>{
+  let searchValue = search_input.value.toLowerCase();
+
+  console.log(searchValue);
+  
+  let search_value_type = arr.filter(data =>{
+    return data.Type == searchValue;
+  })
+
+
+
+  console.log(search_value_type);
+
+
+
+  if(search_value_type.length === 0){
+    alert("aucun data");
+  }
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+  for (const arr_data of arr){
+    
+
+  console.log(arr_data.Type);
+
+  console.log(arr_data);
+  
+   if(arr_data.Type != searchValue){
+    continue;
+   }
+
+   else{
+
+  
+   }
+  
+  }
+
+  
+})
 
 
 
